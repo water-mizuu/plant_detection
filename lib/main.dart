@@ -144,7 +144,7 @@ class _SplashScreenState extends State<SplashScreen> {
               const Icon(Icons.camera_alt, size: 80, color: Colors.white),
               const SizedBox(height: 20),
               const Text(
-                'TFLite Image Processor',
+                'Herbalyzer 2.0',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
               ),
               const SizedBox(height: 30),
@@ -279,7 +279,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('TFLite Image Processor'),
+        title: const Text('Herbalyzer 2.0'),
         centerTitle: true,
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
@@ -327,18 +327,29 @@ class _MainScreenState extends State<MainScreen> {
                             var topFive = (prediction.indexed.toList()
                                   ..sort((a, b) => b.$2.compareTo(a.$2)))
                                 .sublist(0, 5);
+                            var (index, confidence) = topFive[0];
 
-                            if (topFive[0].$2 < 0.75) {
-                              return const Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Text(
-                                  'WARNING: Top confidence from the image is low.',
-                                  style: TextStyle(color: Colors.redAccent, fontSize: 16),
-                                  textAlign: TextAlign.center,
-                                ),
-                              );
-                            }
-                            return const SizedBox.shrink();
+                            return Column(
+                              children: [
+                                if (confidence < 0.75)
+                                  const Padding(
+                                    padding: EdgeInsets.all(16.0),
+                                    child: Text(
+                                      'WARNING: Top confidence from the image is low.',
+                                      style: TextStyle(color: Colors.redAccent, fontSize: 16),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  )
+                                else
+                                  Text(
+                                    'Top prediction: ${classLabels[index]}',
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                              ],
+                            );
                           },
                         ),
                       if (_isProcessing)
